@@ -1,6 +1,13 @@
 {
   "name": "bankaccount",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "uuid": "^8.3.2"
+  }
 }
