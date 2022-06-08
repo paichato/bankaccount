@@ -37,6 +37,21 @@ app.get("/statement/", verifyIfAccountExist, (req, res) => {
   }
 });
 
+app.post("/deposit", verifyIfAccountExist, (req, res) => {
+  const { description, amount } = req.body;
+  const { customer } = req;
+
+  const statementOperation = {
+    description,
+    amount,
+    createdAt: new Date(),
+    type: "credit",
+  };
+  customer.statement.push(statementOperation);
+
+  return res.status(201).send();
+});
+
 app.listen(3333, () => {
   console.log("APP is listening on port 3333");
 });
