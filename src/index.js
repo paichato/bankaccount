@@ -6,6 +6,14 @@ app.use(express.json());
 
 const customers = [];
 
+const verifyIfAccountExist = (req, res, next) => {
+  const { cpf } = req.headers;
+  const customer = customers.find((cust) => cust.cpf === cpf);
+  if (!customer) return res.status(400).json({ error: "Customer not found" });
+  req.customer = customer;
+  return next();
+};
+
 app.post("/account", (req, res) => {
   const { cpf, name } = req.body;
 
@@ -21,13 +29,9 @@ app.post("/account", (req, res) => {
   return res.status(201).send(customers);
 });
 
-app.get("/statement/", (req, res) => {
+app.get("/statement/", verifyIfAccountExist, (req, res) => {
   try {
-    const { cpf } = req.headers;
-    const customer = customers.find((cust) => cust.cpf === cpf);
-    if (!customer) return res.status(400).json({ error: "Customer not found" });
-
-    return res.json(customer.statement);
+    return res.json(req.customer.statement);
   } catch (error) {
     return res.json({ error: "Erro ao pegar dados" });
   }
