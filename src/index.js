@@ -69,7 +69,7 @@ app.post("/withdraw", verifyIfAccountExist, (req, res) => {
   const balance = getBalance(customer.statement);
 
   if (balance < amount) {
-    return response.status(400).json({ error: "Insuficcient funds!" });
+    return res.status(400).json({ error: "Insuficcient funds!" });
   }
 
   const statementOperation = {
