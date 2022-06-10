@@ -106,6 +106,12 @@ app.put("/account", verifyIfAccountExist, (req, res) => {
     .send(`${oldName} foi alterado para ${customer.name} com sucesso`);
 });
 
+app.get("/account", verifyIfAccountExist, (req, res) => {
+  const { customer } = req;
+
+  return res.json(customer);
+});
+
 app.listen(3333, () => {
   console.log("APP is listening on port 3333");
 });
