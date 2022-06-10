@@ -82,6 +82,20 @@ app.post("/withdraw", verifyIfAccountExist, (req, res) => {
   return res.status(201).send();
 });
 
+app.get("/statement/date", verifyIfAccountExist, (req, res) => {
+  const { customer } = req;
+  const { date } = req.query;
+
+  //hack to have the right date, no mater the time requested
+  const dateFormat = new Date(date + " 00:00");
+
+  const statement = customer.statement.filter(
+    (state) =>
+      state.createdAt.toDateString() === new Date(dateFormat).toDateString()
+  );
+  return res.json(statement);
+});
+
 app.listen(3333, () => {
   console.log("APP is listening on port 3333");
 });
