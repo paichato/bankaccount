@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(express.json());
 
-const customers = [];
+var customers = [];
 
 const verifyIfAccountExist = (req, res, next) => {
   const { cpf } = req.headers;
@@ -110,6 +110,19 @@ app.get("/account", verifyIfAccountExist, (req, res) => {
   const { customer } = req;
 
   return res.json(customer);
+});
+
+app.delete("/account", verifyIfAccountExist, (req, res) => {
+  const { customer } = req;
+
+  // const newCustomersArray = customers.filter(
+  //   (cust) => cust.cpf !== customer.cpf
+  // );
+  // customers = newCustomersArray;
+
+  customers.splice(customer, 1);
+
+  res.status(201).send(customers);
 });
 
 app.listen(3333, () => {
