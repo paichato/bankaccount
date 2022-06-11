@@ -17,10 +17,13 @@ const verifyIfAccountExist = (req, res, next) => {
 
 const getBalance = (statement) => {
   const balance = statement.reduce((acc, operation) => {
-    if (operation.type === "credit") return acc + operation.amount;
-
-    return acc - operation.amount;
+    if (operation.type === "credit") {
+      return acc + operation.amount;
+    } else {
+      return acc - operation.amount;
+    }
   }, 0);
+  console.log("saldo e:", balance);
   return balance;
 };
 
@@ -79,7 +82,7 @@ app.post("/withdraw", verifyIfAccountExist, (req, res) => {
   };
   customer.statement.push(statementOperation);
 
-  return res.status(201).send();
+  return res.sendStatus(201).send(balance);
 });
 
 app.get("/statement/date", verifyIfAccountExist, (req, res) => {
@@ -115,14 +118,16 @@ app.get("/account", verifyIfAccountExist, (req, res) => {
 app.delete("/account", verifyIfAccountExist, (req, res) => {
   const { customer } = req;
 
-  // const newCustomersArray = customers.filter(
-  //   (cust) => cust.cpf !== customer.cpf
-  // );
-  // customers = newCustomersArray;
-
   customers.splice(customer, 1);
 
-  res.status(201).send(customers);
+  res.status(200).send(customers);
+});
+
+app.get("/balance", verifyIfAccountExist, (req, res) => {
+  const { customer } = req;
+  const balance = getBalance(customer.statement);
+
+  return res.json(balance);
 });
 
 app.listen(3333, () => {
